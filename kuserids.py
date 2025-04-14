@@ -5,10 +5,17 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 
 # Function to authenticate Kaggle API using the API key
 def authenticate_kaggle():
-    if not os.path.exists('kaggle.json'):
-        st.error("Please upload your Kaggle API key (kaggle.json).")
-    else:
-        os.environ['KAGGLE_CONFIG_DIR'] = os.getcwd()
+    kaggle_dir = os.path.join(os.path.expanduser("~"), ".kaggle")
+    kaggle_path = os.path.join(kaggle_dir, "kaggle.json")
+
+    if not os.path.exists(kaggle_dir):
+        os.makedirs(kaggle_dir)
+
+    # Move uploaded kaggle.json to ~/.kaggle/kaggle.json
+    with open("kaggle.json", "rb") as src, open(kaggle_path, "wb") as dst:
+        dst.write(src.read())
+
+    os.chmod(kaggle_path, 0o600)  # Set file permissions securely
 
 # Function to fetch submitted notebooks by a Kaggle user
 def get_notebooks_submitted(kaggle_id):
