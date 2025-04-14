@@ -2,4 +2,3 @@ streamlit
 pandas
 kaggle
 openpyxl
-KaggleApi
